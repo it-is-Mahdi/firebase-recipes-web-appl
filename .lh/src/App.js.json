@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 1,
+            "activePatchIndex": 2,
             "patches": [
                 {
                     "date": 1691531401972,
@@ -12,6 +12,10 @@
                 {
                     "date": 1691546897665,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,9 @@\n import logo from \"./logo.svg\";\n import \"./App.css\";\n \n+import firebase from './FirebaseConfig';\n+\n function App() {\n   return (\n     <div className=\"App\">\n       <dev className=\"title-row\">\n"
+                },
+                {
+                    "date": 1691728348706,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,8 @@\n import logo from \"./logo.svg\";\n import \"./App.css\";\n \n+// eslint-disable-next-line no-unused-vars\n import firebase from \"./FirebaseConfig\";\n \n function App() {\n   return (\n"
                 }
             ],
             "date": 1691531401972,
