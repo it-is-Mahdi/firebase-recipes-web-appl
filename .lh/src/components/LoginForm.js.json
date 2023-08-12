@@ -1,0 +1,26 @@
+{
+    "sourceFile": "src/components/LoginForm.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 2,
+            "patches": [
+                {
+                    "date": 1691806150253,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1691809700500,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,8 +1,30 @@\n import { useState } from \"react\";\r\n import FirebaseAuthService from \"../FirebaseAuthService\";\r\n \r\n function LoginForm({ existingUser }) {\r\n+  const [username, setUsername] = useState(\"\");\r\n+  const [password, setPassword] = useState(\"\");\r\n+\r\n+  async function handleSubmit(event) {\r\n+    event.preventDefault();\r\n+\r\n+    try {\r\n+\r\n+      await FirebaseAuthService.registerUser(username, password);\r\n+      setUsername(\"\");\r\n+      setPassword(\"\");\r\n+      \r\n+    } catch (error) {\r\n+      alert(error.message);\r\n+      \r\n+    }\r\n+\r\n+\r\n+\r\n+\r\n+  }\r\n+\r\n   return <h1>Login Form</h1>;\r\n }\r\n \r\n export default LoginForm;\r\n"
+                },
+                {
+                    "date": 1691810569716,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -16,8 +16,35 @@\n       alert(error.message);\r\n     }\r\n   }\r\n \r\n-  return <h1>Login Form</h1>;\r\n+  function handleLogout(){\r\n+    FirebaseAuthService.logoutUser();\r\n+  }\r\n+\r\n+\r\n+\r\n+  return <div className=\"login-form-container\">\r\n+    {\r\n+      existingUser ? (<div className=\"row\">\r\n+        <h3>Welcom, {existingUser.email}</h3>\r\n+        <button type=\"button\" className=\"primary-button\" onClick={handleLogout}>Logout</button>\r\n+      </div>\r\n+      ) : (\r\n+      <form onSubmit={handleSubmit} className=\"login-form\">\r\n+        <label className=\"input-label login-label\">\r\n+          username (email):\r\n+          <input\r\n+            type=\"email\"\r\n+            required\r\n+            value={username}\r\n+            onChange={(e) => setUsername(e.target.value)}\r\n+            className=\"input-text\"\r\n+            />\r\n+          \r\n+        </label>\r\n+      </form>)\r\n+    }\r\n+  </div>;\r\n }\r\n \r\n export default LoginForm;\r\n"
+                }
+            ],
+            "date": 1691806150253,
+            "name": "Commit-0",
+            "content": "import { useState } from \"react\";\r\nimport FirebaseAuthService from \"../FirebaseAuthService\";\r\n\r\nfunction LoginForm({ existingUser }){\r\n    return <h1>Login Form</h1>;\r\n}\r\n\r\nexport default LoginForm;"
+        }
+    ]
+}

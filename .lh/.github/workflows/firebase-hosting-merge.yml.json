@@ -3,11 +3,15 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 0,
+            "activePatchIndex": 1,
             "patches": [
                 {
                     "date": 1691727679092,
                     "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1691814410688,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -8,8 +8,16 @@\n       - master\n jobs:\n   build_and_deploy:\n     runs-on: ubuntu-latest\n+    env:\n+      REACT_APP_API_KEY: \"${{ secrets.REACT_APP_API_KEY }}\"\n+      REACT_APP_AUTH_DOMAIN: \"${{ secrets.REACT_APP_AUTH_DOMAIN }}\"\n+      REACT_APP_PROJECT_ID: \"${{ secrets.REACT_APP_PROJECT_ID }}\"\n+      REACT_APP_STORAGE_BUCKET: \"${{ secrets.REACT_APP_STORAGE_BUCKET }}\"\n+      REACT_APP_MESSAGING_SENDER_ID: \"${{ secrets.REACT_APP_MESSAGING_SENDER_ID }}\"\n+      REACT_APP_APP_ID: \"${{ secrets.REACT_APP_APP_ID }}\"\n+      REACT_APP_MEASUREMENT_ID: \"${{ secrets.REACT_APP_MEASUREMENT_ID }}\"\n     steps:\n       - uses: actions/checkout@v3\n       - run: npm install\n       - run: npm run build\n"
                 }
             ],
             "date": 1691727679092,

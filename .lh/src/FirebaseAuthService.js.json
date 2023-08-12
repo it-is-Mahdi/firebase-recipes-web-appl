@@ -1,0 +1,22 @@
+{
+    "sourceFile": "src/FirebaseAuthService.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1691799967796,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1691807932513,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,7 @@\n import firebase from \"./FirebaseConfig\";\r\n \r\n-const auth = firebase.auth;\r\n+const auth = firebase.auth();\r\n \r\n const registerUser = (email, password) => {\r\n   return auth.createUserWithEmailAndPassword(email, password);\r\n };\r\n"
+                }
+            ],
+            "date": 1691799967796,
+            "name": "Commit-0",
+            "content": "import firebase from \"./FirebaseConfig\";\r\n\r\nconst auth = firebase.auth;\r\n\r\nconst registerUser = (email, password) => {\r\n    return auth.createUserWithEmailAndPassword(email, password);\r\n}\r\n\r\nconst loginUser = (email, password) => {\r\n    return auth.signInWithEmailAndPassword(email, password);\r\n}\r\n\r\nconst logoutUser = (email, password) => {\r\n    return auth.signOut();\r\n}\r\n\r\nconst sendPasswordResetEmail = (email) => {\r\n    return auth.sendPasswordResetEmail(email);\r\n}\r\n\r\nconst loginWithGoogle = () => {\r\n    const provider = new firebase.auth.GoogleAuthProvider;\r\n\r\n    return auth.signInWithPopup(provider);\r\n}\r\n\r\nconst subscribeToAuthChanges = (handleAuthChange) => {\r\n    auth.onAuthStateChanged((user) => {\r\n        handleAuthChange(user);\r\n    });\r\n}\r\n\r\nconst FirebaseAuthService = {\r\n    registerUser,\r\n    loginUser,\r\n    logoutUser,\r\n    sendPasswordResetEmail,\r\n    loginWithGoogle,\r\n    subscribeToAuthChanges\r\n};\r\n\r\nexport default FirebaseAuthService;"
+        }
+    ]
+}
