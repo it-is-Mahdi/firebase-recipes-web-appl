@@ -1,0 +1,26 @@
+{
+    "sourceFile": "src/components/AddEditRecipeForm.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 2,
+            "patches": [
+                {
+                    "date": 1691955030080,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1691956339536,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,5 +1,19 @@\n-function AddEditRecipeForm() {\r\n+import { useState } from \"react\";\r\n+\r\n+\r\n+function AddEditRecipeForm({ handleAddRecipe }) {\r\n+    const [name, setName] = useState(\"\");\r\n+    const [category, setCategory] = useState(\"\");\r\n+    const [publishDate, setPublishDate] = useState(\r\n+        new Date().toISOString().split(\"T\")[0]\r\n+    );\r\n+    const [directions, setDirections] = useState(\"\");\r\n+    const [ingredients, setIngredients] = useState([]);\r\n+    const [ingredientName, setIngredientName] = useState(\"\");\r\n+    \r\n+\r\n+\r\n   return <h1>Add edit recipe form</h1>;\r\n }\r\n \r\n export default AddEditRecipeForm;\r\n"
+                },
+                {
+                    "date": 1691956691448,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -9,8 +9,21 @@\n   const [directions, setDirections] = useState(\"\");\r\n   const [ingredients, setIngredients] = useState([]);\r\n   const [ingredientName, setIngredientName] = useState(\"\");\r\n \r\n-  return <h1>Add edit recipe form</h1>;\r\n+  return <form className=\"add-edit-recipe-form-container\">\r\n+    <h2>Add a New Recipe</h2>\r\n+    <div className=\"top-form-section\">\r\n+        <div className=\"fields\">\r\n+            <label className=\"recipe-label input-label\">\r\n+                Recipe Name:\r\n+                <input type=\"text\" required value={name} onChange={(e) => setName(e.target.value)}\r\n+                className=\"input-text\"/>\r\n+\r\n+            </label>\r\n+        </div>\r\n+    </div>\r\n+    <div></div>\r\n+  </form>;\r\n }\r\n \r\n export default AddEditRecipeForm;\r\n"
+                }
+            ],
+            "date": 1691955030080,
+            "name": "Commit-0",
+            "content": "function AddEditRecipeForm(){\r\n    return <h1>Add edit recipe form</h1>;\r\n}\r\n\r\nexport default AddEditRecipeForm;"
+        }
+    ]
+}

@@ -1,0 +1,26 @@
+{
+    "sourceFile": "src/FirebaseFirestoreService.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 2,
+            "patches": [
+                {
+                    "date": 1691942855874,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1691984210794,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -5,9 +5,14 @@\n const createDocument = (collection, document) => {\r\n   return firestore.collection(collection).add(document);\r\n };\r\n \r\n+const readDocuments = (collection) => {\r\n+  return firestore.collection(collection).get();\r\n+}\r\n+\r\n const FirebaseFirestoreService = {\r\n   createDocument,\r\n+  readDocuments,\r\n };\r\n \r\n export default FirebaseFirestoreService;\r\n"
+                },
+                {
+                    "date": 1692048254266,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -5,9 +5,21 @@\n const createDocument = (collection, document) => {\r\n   return firestore.collection(collection).add(document);\r\n };\r\n \r\n-const readDocuments = (collection) => {\r\n+const readDocuments = ({collection, queries}) => {\r\n+\r\n+  let collectionRef = firestore.collection(collection);\r\n+\r\n+  if (queries && queries.length > 0){\r\n+    for(const query of queries){\r\n+    debugger;\r\n+    collectionRef = collectionRef.where(\r\n+      query.field, query.condition, query.value\r\n+    );\r\n+  }\r\n+  }\r\n+\r\n   return firestore.collection(collection).get();\r\n };\r\n \r\n const FirebaseFirestoreService = {\r\n"
+                }
+            ],
+            "date": 1691942855874,
+            "name": "Commit-0",
+            "content": "import firebase from \"./FirebaseConfig\";\r\n\r\nconst firestore = firebase.firestore();\r\n\r\nconst createDocument = (collection, document) => {\r\n    return firestore.collection(collection).add(document);\r\n};\r\n\r\nconst FirebaseFirestoreService = {\r\n    createDocument,\r\n};\r\n\r\nexport default FirebaseFirestoreService;"
+        }
+    ]
+}
