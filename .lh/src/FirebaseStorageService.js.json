@@ -1,0 +1,18 @@
+{
+    "sourceFile": "src/FirebaseStorageService.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1693106230490,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1693106230489,
+            "name": "Commit-0",
+            "content": "import firebase from \"./FirebaseConfig\";\r\n\r\nconst storageRef = firebase.storage().ref();\r\n\r\nconst uploadFile = (file, fullFilePath, progressCallback) => {\r\n  const uploadTask = storageRef.child(fullFilePath).put(file);\r\n\r\n  uploadTask.on(\r\n    \"state_changed\",\r\n    (snapshot) => {\r\n      const progress = Math.round(\r\n        (snapshot.bytesTransferred / snapshot.totalBytes) * 100\r\n      );\r\n\r\n      progressCallback(progress);\r\n    },\r\n    (error) => {\r\n      throw error;\r\n    }\r\n  );\r\n\r\n  return uploadTask.then(async () => {\r\n    const downloadUrl = await uploadTask.snapshot.ref.getDownloadURL();\r\n\r\n    return downloadUrl;\r\n  });\r\n};\r\n\r\nconst deleteFile = (fileDownloadUrl) => {\r\n  const decodedUrl = decodeURIComponent(fileDownloadUrl);\r\n  const startIndex = decodedUrl.indexOf(\"/o/\") + 3;\r\n  const endIndex = decodedUrl.indexOf(\"?\");\r\n  const filePath = decodedUrl.substring(startIndex, endIndex);\r\n\r\n  return storageRef.child(filePath).delete();\r\n};\r\n\r\nconst FirebaseStorageService = {\r\n  uploadFile,\r\n  deleteFile,\r\n};\r\n\r\nexport default FirebaseStorageService;"
+        }
+    ]
+}

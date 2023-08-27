@@ -1,0 +1,18 @@
+{
+    "sourceFile": "src/components/ImageUploadPreview.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1693106372526,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1693106372526,
+            "name": "Commit-0",
+            "content": "import { useState, useRef, useEffect } from \"react\";\r\nimport { v4 as uuidv4 } from \"uuid\";\r\n\r\nimport FirebaseStorageService from \"../FirebaseStorageService\";\r\n\r\nfunction ImageUploadPreview({\r\n  basePath,\r\n  existingImageUrl,\r\n  handleUploadFinish,\r\n  handleUploadCancel,\r\n}) {\r\n  const [uploadProgress, setUploadProgrses] = useState(-1);\r\n  const [imageUrl, setImageUrl] = useState(\"\");\r\n\r\n  const fileInputRef = useRef();\r\n\r\n  useEffect(() => {\r\n    if (existingImageUrl) {\r\n      setImageUrl(existingImageUrl);\r\n    } else {\r\n      setUploadProgrses(-1);\r\n      setImageUrl(\"\");\r\n      fileInputRef.current.value = null;\r\n    }\r\n  }, [existingImageUrl]);\r\n\r\n  async function handleFileChanged(event) {\r\n    const files = event.target.files;\r\n    const file = files[0];\r\n\r\n    if (!file) {\r\n      alert(\"File Select Failed. Please try again.\");\r\n      return;\r\n    }\r\n\r\n    const generatedFileId = uuidv4();\r\n\r\n    try {\r\n      const downloadUrl = await FirebaseStorageService.uploadFile(\r\n        file,\r\n        `${basePath}/${generatedFileId}`,\r\n        setUploadProgrses\r\n      );\r\n\r\n      setImageUrl(downloadUrl);\r\n      handleUploadFinish(downloadUrl);\r\n    } catch (error) {\r\n      setUploadProgrses(-1);\r\n      fileInputRef.current.value = null;\r\n      alert(error.message);\r\n      throw error;\r\n    }\r\n  }\r\n\r\n  function handleCancelImageClick() {\r\n    FirebaseStorageService.deleteFile(imageUrl);\r\n    fileInputRef.current.value = null;\r\n    setImageUrl(\"\");\r\n    setUploadProgrses(-1);\r\n    handleUploadCancel();\r\n  }\r\n\r\n  return (\r\n    <div className=\"image-upload-preview-container\">\r\n      <input\r\n        type=\"file\"\r\n        accept=\"image/*\"\r\n        onChange={handleFileChanged}\r\n        ref={fileInputRef}\r\n        hidden={uploadProgress > -1 || imageUrl}\r\n      />\r\n      {!imageUrl && uploadProgress > -1 ? (\r\n        <div>\r\n          <label htmlFor=\"file\">Upload Progress:</label>\r\n          <progress id=\"file\" value={uploadProgress} max=\"100\">\r\n            {uploadProgress}%\r\n          </progress>\r\n          <span>{uploadProgress}%</span>\r\n        </div>\r\n      ) : null}\r\n      {imageUrl ? (\r\n        <div className=\"image-preview\">\r\n          <img src={imageUrl} alt={imageUrl} className=\"image\" />\r\n          <button\r\n            type=\"button\"\r\n            onClick={handleCancelImageClick}\r\n            className=\"primary-button\"\r\n          >\r\n            Cancel Image\r\n          </button>\r\n        </div>\r\n      ) : null}\r\n    </div>\r\n  );\r\n}\r\n\r\nexport default ImageUploadPreview;"
+        }
+    ]
+}
