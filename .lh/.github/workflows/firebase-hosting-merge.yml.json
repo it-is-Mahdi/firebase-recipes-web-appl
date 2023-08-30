@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 2,
+            "activePatchIndex": 3,
             "patches": [
                 {
                     "date": 1691727679092,
@@ -16,6 +16,10 @@
                 {
                     "date": 1693424688680,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -26,4 +26,23 @@\n           repoToken: \"${{ secrets.GITHUB_TOKEN }}\"\n           firebaseServiceAccount: \"${{ secrets.FIREBASE_SERVICE_ACCOUNT_FIR_RECIPES_6DE29 }}\"\n           channelId: live\n           projectId: fir-recipes-6de29\n+  functions_deploy:\n+    runs-on: ubuntu-latest\n+    steps:\n+      - name: ⬇️ Checkout repo\n+        uses: actions/checkout@v2\n+\n+      - name: ⎔ Setup node\n+        uses: actions/setup-node@v1\n+        with:\n+          node-version: 12\n+\n+      - name: 📥 Download deps\n+        working-directory: functions\n+        run: yarn install\n+\n+      - name: 🚀 Deploy\n+        run: npx firebase-tools deploy --token \"$FIREBASE_TOKEN\" --only functions\n+        env:\n+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1693426017022,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -35,9 +35,9 @@\n \n       - name: ⎔ Setup node\n         uses: actions/setup-node@v1\n         with:\n-          node-version: 12\n+          node-version: 16\n \n       - name: 📥 Download deps\n         working-directory: functions\n         run: yarn install\n"
                 }
             ],
             "date": 1691727679092,
