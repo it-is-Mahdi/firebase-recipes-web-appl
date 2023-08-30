@@ -1,0 +1,26 @@
+{
+    "sourceFile": "functions/index.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 2,
+            "patches": [
+                {
+                    "date": 1693323243031,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1693323592408,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -14,6 +14,6 @@\n // https://firebase.google.com/docs/functions/get-started\n \n exports.helloWorld = onRequest((request, response) => {\n   logger.info(\"Hello logs!\", { structuredData: true });\n-  response.send(\"Hello from Firebase!\");\n+  response.send(\"Hello from Firebase New Project!\");\n });\n"
+                },
+                {
+                    "date": 1693362860125,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,19 +1,33 @@\n-/**\n- * Import function triggers from their respective submodules:\n- *\n- * const {onCall} = require(\"firebase-functions/v2/https\");\n- * const {onDocumentWritten} = require(\"firebase-functions/v2/firestore\");\n- *\n- * See a full list of supported triggers at https://firebase.google.com/docs/functions\n- */\n+const FirebaseConfig = require('./FirebaseConfig');\n+const functions = FirebaseConfig.functions;\n+const firestore = FirebaseConfig.firestore;\n+const storageBucket = FirebaseConfig.storageBucket;\n+const admin = FirebaseConfig.admin;\n \n-const { onRequest } = require(\"firebase-functions/v2/https\");\n-const logger = require(\"firebase-functions/logger\");\n \n-// Create and deploy your first functions\n-// https://firebase.google.com/docs/functions/get-started\n+exports.onCreateRecipe = functions.firestore\n+    .document(\"recipes/{recipeId}\")\n+    .onCreate(async (snapshot) => {\n+        const countDocRef = firestore.collection(\"recipeCounts\").doc(\"all\");\n+        const countDoc = await countDocRef.get();\n \n-exports.helloWorld = onRequest((request, response) => {\n-  logger.info(\"Hello logs!\", { structuredData: true });\n-  response.send(\"Hello from Firebase New Project!\");\n-});\n+        if(countDoc.exists){\n+            countDocRef.update({count: admin.firestore.FieldValue.increment(1)});\n+        } else{\n+            countDocRef.set({count: 1});\n+        }\n+\n+        const recipe = snapshot.data();\n+\n+        if(recipe.isPublished){\n+            const countDocRef = firestore.collection(\"recipeCounts\").doc(\"published\");\n+            const countDoc = await countDocRef.get();\n+\n+            if(countDoc.exists){\n+                countDocRef.update({count: admin.firestore.FieldValue.increment(1)});\n+            } else{\n+                countDocRef.set({count: 1});\n+            }\n+        }\n+\n+    });\n"
+                }
+            ],
+            "date": 1693323243031,
+            "name": "Commit-0",
+            "content": "/**\n * Import function triggers from their respective submodules:\n *\n * const {onCall} = require(\"firebase-functions/v2/https\");\n * const {onDocumentWritten} = require(\"firebase-functions/v2/firestore\");\n *\n * See a full list of supported triggers at https://firebase.google.com/docs/functions\n */\n\nconst {onRequest} = require(\"firebase-functions/v2/https\");\nconst logger = require(\"firebase-functions/logger\");\n\n// Create and deploy your first functions\n// https://firebase.google.com/docs/functions/get-started\n\nexports.helloWorld = onRequest((request, response) => {\n  logger.info(\"Hello logs!\", {structuredData: true});\n  response.send(\"Hello from Firebase!\");\n});\n"
+        }
+    ]
+}

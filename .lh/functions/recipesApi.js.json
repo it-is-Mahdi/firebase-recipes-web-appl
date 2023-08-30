@@ -1,0 +1,26 @@
+{
+    "sourceFile": "functions/recipesApi.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 2,
+            "patches": [
+                {
+                    "date": 1693370078251,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1693370104145,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -22,4 +22,6 @@\n \r\n app.listen(3005, () => {\r\n   console.log(\"api started\");\r\n });\r\n+\r\n+module.exports = app;\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1693370183594,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -19,9 +19,13 @@\n app.get(\"/\", (req, res) => {\r\n   res.send(\"Hello from firebase function express API\");\r\n });\r\n \r\n-app.listen(3005, () => {\r\n-  console.log(\"api started\");\r\n-});\r\n+if(process.env.NODE_ENV !== 'production'){\r\n+    \r\n+    \r\n+    app.listen(3005, () => {\r\n+      console.log(\"api started\");\r\n+    });\r\n+}\r\n \r\n module.exports = app;\r\n"
+                }
+            ],
+            "date": 1693370078251,
+            "name": "Commit-0",
+            "content": "const express = require(\"express\");\r\nconst bodyParser = require(\"body-parser\");\r\nconst cors = require(\"cors\");\r\n\r\nconst FirebaseConfig = require(\"./FirebaseConfig\");\r\nconst Utilities = require(\"./utilities.js\");\r\n\r\nconst auth = FirebaseConfig.auth;\r\nconst firestore = FirebaseConfig.firestore;\r\n\r\nconst app = express();\r\n\r\napp.use(cors({ origin: true }));\r\n\r\napp.use(bodyParser.json());\r\n\r\n//~~ RESTFUL CRUD WEB API ENDPOINT ~~\r\n\r\napp.get('/', (req, res) =>{\r\n    res.send('Hello from firebase function express API');\r\n})\r\n\r\napp.listen(3005, () =>{\r\n    console.log('api started')\r\n})"
+        }
+    ]
+}

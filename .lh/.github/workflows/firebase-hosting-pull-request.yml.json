@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 1,
+            "activePatchIndex": 2,
             "patches": [
                 {
                     "date": 1691727687444,
@@ -12,6 +12,10 @@
                 {
                     "date": 1691814426990,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -6,8 +6,16 @@\n jobs:\n   build_and_preview:\n     if: \"${{ github.event.pull_request.head.repo.full_name == github.repository }}\"\n     runs-on: ubuntu-latest\n+    env:\n+      REACT_APP_API_KEY: \"${{ secrets.REACT_APP_API_KEY }}\"\n+      REACT_APP_AUTH_DOMAIN: \"${{ secrets.REACT_APP_AUTH_DOMAIN }}\"\n+      REACT_APP_PROJECT_ID: \"${{ secrets.REACT_APP_PROJECT_ID }}\"\n+      REACT_APP_STORAGE_BUCKET: \"${{ secrets.REACT_APP_STORAGE_BUCKET }}\"\n+      REACT_APP_MESSAGING_SENDER_ID: \"${{ secrets.REACT_APP_MESSAGING_SENDER_ID }}\"\n+      REACT_APP_APP_ID: \"${{ secrets.REACT_APP_APP_ID }}\"\n+      REACT_APP_MEASUREMENT_ID: \"${{ secrets.REACT_APP_MEASUREMENT_ID }}\"\n     steps:\n       - uses: actions/checkout@v3\n       - run: npm install\n       - run: npm run build\n"
+                },
+                {
+                    "date": 1693424752855,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -23,4 +23,23 @@\n         with:\n           repoToken: \"${{ secrets.GITHUB_TOKEN }}\"\n           firebaseServiceAccount: \"${{ secrets.FIREBASE_SERVICE_ACCOUNT_FIR_RECIPES_6DE29 }}\"\n           projectId: fir-recipes-6de29\n+          functions_deploy:\n+            runs-on: ubuntu-latest\n+            steps:\n+              - name: ⬇️ Checkout repo\n+                uses: actions/checkout@v2\n+        \n+              - name: ⎔ Setup node\n+                uses: actions/setup-node@v1\n+                with:\n+                  node-version: 12\n+        \n+              - name: 📥 Download deps\n+                working-directory: functions\n+                run: yarn install\n+        \n+              - name: 🚀 Deploy\n+                run: npx firebase-tools deploy --token \"$FIREBASE_TOKEN\" --only functions\n+                env:\n+                  FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}\n\\ No newline at end of file\n"
                 }
             ],
             "date": 1691727687444,

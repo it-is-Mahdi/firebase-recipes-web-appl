@@ -1,0 +1,26 @@
+{
+    "sourceFile": "functions/FirebaseConfig.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 2,
+            "patches": [
+                {
+                    "date": 1693361648222,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1693363111094,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -3,22 +3,21 @@\n \r\n const FIREBASE_STORAGE_BUCKET = \"fir-recipes-6de29.appspot.com\";\r\n \r\n const apiFirebaseOptions = {\r\n-    ...functions.config().firebase,\r\n-    Credential: admin.credential.applicationDefault()\r\n+  ...functions.config().firebase,\r\n+  Credential: admin.credential.applicationDefault(),\r\n+};\r\n \r\n-}\r\n-\r\n admin.initializeApp(apiFirebaseOptions);\r\n \r\n const firestore = admin.firestore();\r\n \r\n-const settings = {timestampsInSnapshots: true};\r\n+const settings = { timestampsInSnapshots: true };\r\n \r\n firestore.settings(settings);\r\n \r\n const storageBucket = admin.storage().bucket(FIREBASE_STORAGE_BUCKET);\r\n \r\n const auth = admin.auth();\r\n \r\n-module.exports = {functions, auth, firestore, storageBucket, admin};\r\n+module.exports = { functions, auth, firestore, storageBucket, admin };\r\n"
+                },
+                {
+                    "date": 1693374692608,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -5,8 +5,9 @@\n \r\n const apiFirebaseOptions = {\r\n   ...functions.config().firebase,\r\n   Credential: admin.credential.applicationDefault(),\r\n+  projectId: `fir-recipes-6de29`\r\n };\r\n \r\n admin.initializeApp(apiFirebaseOptions);\r\n \r\n"
+                }
+            ],
+            "date": 1693361648222,
+            "name": "Commit-0",
+            "content": "const functions = require(\"firebase-functions\");\r\nconst admin = require(\"firebase-admin\");\r\n\r\nconst FIREBASE_STORAGE_BUCKET = \"fir-recipes-6de29.appspot.com\";\r\n\r\nconst apiFirebaseOptions = {\r\n    ...functions.config().firebase,\r\n    Credential: admin.credential.applicationDefault()\r\n\r\n}\r\n\r\nadmin.initializeApp(apiFirebaseOptions);\r\n\r\nconst firestore = admin.firestore();\r\n\r\nconst settings = {timestampsInSnapshots: true};\r\n\r\nfirestore.settings(settings);\r\n\r\nconst storageBucket = admin.storage().bucket(FIREBASE_STORAGE_BUCKET);\r\n\r\nconst auth = admin.auth();\r\n\r\nmodule.exports = {functions, auth, firestore, storageBucket, admin};\r\n"
+        }
+    ]
+}
