@@ -78,7 +78,7 @@ function App() {
     let fetchedRecipes = [];
 
     try {
-      // const response = await FirebaseFirestoreService.readDocuments({
+      /*// const response = await FirebaseFirestoreService.readDocuments({
       //   collection: "recipes",
       //   queries: queries,
       //   orderByField: orderByField,
@@ -99,7 +99,7 @@ function App() {
       //   fetchedRecipes = [...recipes, ...newRecipes];
       // } else {
       //   fetchedRecipes = [...newRecipes];
-      // }
+      // }*/
 
       const response = await FirebaseFirestoreRestService.readDocuments({
         collection: "recipes",
@@ -185,10 +185,10 @@ function App() {
 
   async function handleAddRecipe(newRecipe) {
     try {
-      // const response = await FirebaseFirestoreService.createDocument(
+      /*// const response = await FirebaseFirestoreService.createDocument(
       //   "recipes",
       //   newRecipe
-      // );
+      // );*/
 
       const response = await FirebaseFirestoreRestService.createDocument(
         "recipes",
@@ -205,11 +205,12 @@ function App() {
 
   async function handleUpdateRecipe(newRecipe, recipeId) {
     try {
-      // await FirebaseFirestoreService.updateDocument(
+      /*// await FirebaseFirestoreService.updateDocument(
       //   "recipes",
       //   recipeId,
       //   newRecipe
       // );
+      */
 
       await FirebaseFirestoreRestService.updateDocument(
         "recipes",
