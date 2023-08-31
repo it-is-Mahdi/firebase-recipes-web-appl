@@ -2,7 +2,8 @@ import { startTransition, useEffect, useState } from "react";
 import FirebaseAuthService from "./FirebaseAuthService";
 import LoginForm from "./components/LoginForm";
 import AddEditRecipeForm from "./components/AddEditRecipeForm";
-import FirebaseFirestoreService from "./FirebaseFirestoreService";
+//import FirebaseFirestoreService from "./FirebaseFirestoreService";
+import FirebaseFirestoreRestService from "./FirebaseFirestoreRestService";
 
 // eslint-disable-next-line no-unused-vars
 import logo from "./logo.svg";
@@ -16,6 +17,9 @@ function App() {
   const [categoryFilter, setCategoryFilter] = useState("");
   const [orderBy, setOrderBy] = useState("publishDateDec");
   const [recipesPerPage, setRecipesPerPage] = useState(3);
+  const [isLastPage, setIsLastPage] = useState(false);
+  const [totalNumberOfPages, setTotalNumberOfPages] = useState(0);
+  const [currentPageNumber, setCurrentPageNumber] = useState(1);
 
   useEffect(() => {
     setIsLoading(true);
@@ -31,7 +35,7 @@ function App() {
         setIsLoading(false);
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user, categoryFilter, orderBy, recipesPerPage]);
+  }, [user, categoryFilter, orderBy, recipesPerPage, currentPageNumber]);
 
   FirebaseAuthService.subscribeToAuthChanges(setUser);
 
@@ -74,27 +78,77 @@ function App() {
     let fetchedRecipes = [];
 
     try {
-      const response = await FirebaseFirestoreService.readDocuments({
+      // const response = await FirebaseFirestoreService.readDocuments({
+      //   collection: "recipes",
+      //   queries: queries,
+      //   orderByField: orderByField,
+      //   orderByDirection: orderByDirection,
+      //   perPage: recipesPerPage,
+      //   cursorId: cursorId,
+      // });
+
+      // const newRecipes = response.docs.map((recipeDoc) => {
+      //   const id = recipeDoc.id;
+      //   const data = recipeDoc.data();
+      //   data.publishDate = new Date(data.publishDate.seconds * 1000);
+
+      //   return { ...data, id };
+      // });
+
+      // if (cursorId) {
+      //   fetchedRecipes = [...recipes, ...newRecipes];
+      // } else {
+      //   fetchedRecipes = [...newRecipes];
+      // }
+
+      const response = await FirebaseFirestoreRestService.readDocuments({
         collection: "recipes",
         queries: queries,
         orderByField: orderByField,
         orderByDirection: orderByDirection,
         perPage: recipesPerPage,
-        cursorId: cursorId,
+        pageNumber: currentPageNumber,
       });
 
-      const newRecipes = response.docs.map((recipeDoc) => {
-        const id = recipeDoc.id;
-        const data = recipeDoc.data();
-        data.publishDate = new Date(data.publishDate.seconds * 1000);
+      if (response && response.documents) {
+        const totalNumberOfPages = Math.ceil(
+          response.recipeCount / recipesPerPage
+        );
 
-        return { ...data, id };
-      });
+        setTotalNumberOfPages(totalNumberOfPages);
 
-      if (cursorId) {
-        fetchedRecipes = [...recipes, ...newRecipes];
-      } else {
-        fetchedRecipes = [...newRecipes];
+        const nextPageQuery = {
+          collection: "recipes",
+          queries: queries,
+          orderByField: orderByField,
+          orderByDirection: orderByDirection,
+          perPage: recipesPerPage,
+          pageNumber: currentPageNumber + 1,
+        };
+
+        const nextPageResponse =
+          await FirebaseFirestoreRestService.readDocuments(nextPageQuery);
+
+        if (
+          nextPageResponse &&
+          nextPageResponse.documents &&
+          nextPageResponse.documents.length === 0
+        ) {
+          setIsLastPage(true);
+        } else {
+          setIsLastPage(false);
+        }
+
+        if (response.documents.length === 0 && currentPageNumber !== 1) {
+          setCurrentPageNumber(currentPageNumber - 1);
+        }
+
+        fetchedRecipes = response.documents;
+
+        fetchedRecipes.forEach((recipe) => {
+          const unixPublsihDateTime = recipe.publishDate;
+          recipe.publishDate = new Date(unixPublsihDateTime * 1000);
+        });
       }
     } catch (error) {
       console.error(error.message);
@@ -131,7 +185,12 @@ function App() {
 
   async function handleAddRecipe(newRecipe) {
     try {
-      const response = await FirebaseFirestoreService.createDocument(
+      // const response = await FirebaseFirestoreService.createDocument(
+      //   "recipes",
+      //   newRecipe
+      // );
+
+      const response = await FirebaseFirestoreRestService.createDocument(
         "recipes",
         newRecipe
       );
@@ -146,7 +205,13 @@ function App() {
 
   async function handleUpdateRecipe(newRecipe, recipeId) {
     try {
-      await FirebaseFirestoreService.updateDocument(
+      // await FirebaseFirestoreService.updateDocument(
+      //   "recipes",
+      //   recipeId,
+      //   newRecipe
+      // );
+
+      await FirebaseFirestoreRestService.updateDocument(
         "recipes",
         recipeId,
         newRecipe
@@ -170,7 +235,8 @@ function App() {
 
     if (deleteConfirmation) {
       try {
-        await FirebaseFirestoreService.deleteDocument("recipes", recipeId);
+        // await FirebaseFirestoreService.deleteDocument("recipes", recipeId);
+        await FirebaseFirestoreRestService.deleteDocument("recipes", recipeId);
 
         handleFetchRecipes();
 
@@ -361,13 +427,75 @@ function App() {
               </select>
             </label>
             <div className="pagination">
-              <button
+              {/* <button
                 type="button"
                 onClick={handleLoadMoreRecipesClick}
                 className="primary-button"
               >
                 LOAD MORE RECIPES
-              </button>
+              </button> */}
+
+              <div className="row">
+                <button
+                  className={
+                    currentPageNumber === 1
+                      ? "primary-button hidden"
+                      : "primary-button"
+                  }
+                  type="button"
+                  //onClick={() => setCurrentPageNumber(currentPageNumber - 1)}
+                  onClick={() =>
+                    startTransition(() => {
+                      setCurrentPageNumber(currentPageNumber - 1);
+                    })
+                  }
+                >
+                  Previous
+                </button>
+                <div>Page {currentPageNumber}</div>
+                <button
+                  className={
+                    isLastPage ? "primary-button hidden" : "primary-button"
+                  }
+                  type="button"
+                  //onClick={() => setCurrentPageNumber(currentPageNumber + 1)}
+
+                  onClick={() =>
+                    startTransition(() => {
+                      setCurrentPageNumber(currentPageNumber + 1);
+                    })
+                  }
+                >
+                  Next
+                </button>
+              </div>
+              <div className="row">
+                {!categoryFilter
+                  ? new Array(totalNumberOfPages)
+                      .fill(0)
+                      .map((value, index) => {
+                        return (
+                          <button
+                            key={index + 1}
+                            type="button"
+                            className={
+                              currentPageNumber === 1
+                                ? "selected-page primary-button page-button"
+                                : "primary-button page-button"
+                            }
+                            //onClick={() => setCurrentPageNumber(index + 1)}
+                            onClick={() =>
+                              startTransition(() => {
+                                setCurrentPageNumber(index + 1);
+                              })
+                            }
+                          >
+                            {index + 1}
+                          </button>
+                        );
+                      })
+                  : null}
+              </div>
             </div>
           </>
         ) : null}
