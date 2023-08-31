@@ -165,6 +165,7 @@ function App() {
     setRecipesPerPage(recipesPerPage);
   }
 
+  // eslint-disable-next-line no-unused-vars
   function handleLoadMoreRecipesClick() {
     const lastRecipe = recipes[recipes.length - 1];
     const cursorId = lastRecipe.id;
