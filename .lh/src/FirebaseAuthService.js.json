@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 1,
+            "activePatchIndex": 2,
             "patches": [
                 {
                     "date": 1691799967796,
@@ -12,6 +12,10 @@
                 {
                     "date": 1691807932513,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,7 @@\n import firebase from \"./FirebaseConfig\";\r\n \r\n-const auth = firebase.auth;\r\n+const auth = firebase.auth();\r\n \r\n const registerUser = (email, password) => {\r\n   return auth.createUserWithEmailAndPassword(email, password);\r\n };\r\n"
+                },
+                {
+                    "date": 1693459591763,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,7 @@\n import firebase from \"./FirebaseConfig\";\r\n \r\n-const auth = firebase.auth();\r\n+const auth = firebase.auth;\r\n \r\n const registerUser = (email, password) => {\r\n   return auth.createUserWithEmailAndPassword(email, password);\r\n };\r\n"
                 }
             ],
             "date": 1691799967796,

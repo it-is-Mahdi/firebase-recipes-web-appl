@@ -2,8 +2,8 @@ import { startTransition, useEffect, useState } from "react";
 import FirebaseAuthService from "./FirebaseAuthService";
 import LoginForm from "./components/LoginForm";
 import AddEditRecipeForm from "./components/AddEditRecipeForm";
-//import FirebaseFirestoreService from "./FirebaseFirestoreService";
-import FirebaseFirestoreRestService from "./FirebaseFirestoreRestService";
+import FirebaseFirestoreService from "./FirebaseFirestoreService";
+//import FirebaseFirestoreRestService from "./FirebaseFirestoreRestService";
 
 // eslint-disable-next-line no-unused-vars
 import logo from "./logo.svg";
@@ -17,7 +17,11 @@ function App() {
   const [categoryFilter, setCategoryFilter] = useState("");
   const [orderBy, setOrderBy] = useState("publishDateDec");
   const [recipesPerPage, setRecipesPerPage] = useState(3);
+
+  // eslint-disable-next-line no-unused-vars
   const [isLastPage, setIsLastPage] = useState(false);
+
+  // eslint-disable-next-line no-unused-vars
   const [totalNumberOfPages, setTotalNumberOfPages] = useState(0);
   const [currentPageNumber, setCurrentPageNumber] = useState(1);
 
@@ -78,37 +82,37 @@ function App() {
     let fetchedRecipes = [];
 
     try {
-      /*// const response = await FirebaseFirestoreService.readDocuments({
-      //   collection: "recipes",
-      //   queries: queries,
-      //   orderByField: orderByField,
-      //   orderByDirection: orderByDirection,
-      //   perPage: recipesPerPage,
-      //   cursorId: cursorId,
-      // });
-
-      // const newRecipes = response.docs.map((recipeDoc) => {
-      //   const id = recipeDoc.id;
-      //   const data = recipeDoc.data();
-      //   data.publishDate = new Date(data.publishDate.seconds * 1000);
-
-      //   return { ...data, id };
-      // });
-
-      // if (cursorId) {
-      //   fetchedRecipes = [...recipes, ...newRecipes];
-      // } else {
-      //   fetchedRecipes = [...newRecipes];
-      // }*/
-
-      const response = await FirebaseFirestoreRestService.readDocuments({
+      const response = await FirebaseFirestoreService.readDocuments({
         collection: "recipes",
         queries: queries,
         orderByField: orderByField,
         orderByDirection: orderByDirection,
         perPage: recipesPerPage,
-        pageNumber: currentPageNumber,
+        cursorId: cursorId,
       });
+
+      const newRecipes = response.docs.map((recipeDoc) => {
+        const id = recipeDoc.id;
+        const data = recipeDoc.data();
+        data.publishDate = new Date(data.publishDate.seconds * 1000);
+
+        return { ...data, id };
+      });
+
+      if (cursorId) {
+        fetchedRecipes = [...recipes, ...newRecipes];
+      } else {
+        fetchedRecipes = [...newRecipes];
+      }
+
+      // const response = await FirebaseFirestoreRestService.readDocuments({
+      //   collection: "recipes",
+      //   queries: queries,
+      //   orderByField: orderByField,
+      //   orderByDirection: orderByDirection,
+      //   perPage: recipesPerPage,
+      //   pageNumber: currentPageNumber,
+      // });
 
       if (response && response.documents) {
         const totalNumberOfPages = Math.ceil(
@@ -126,8 +130,9 @@ function App() {
           pageNumber: currentPageNumber + 1,
         };
 
-        const nextPageResponse =
-          await FirebaseFirestoreRestService.readDocuments(nextPageQuery);
+        const nextPageResponse = await FirebaseFirestoreService.readDocuments(
+          nextPageQuery
+        );
 
         if (
           nextPageResponse &&
@@ -186,15 +191,15 @@ function App() {
 
   async function handleAddRecipe(newRecipe) {
     try {
-      /*// const response = await FirebaseFirestoreService.createDocument(
-      //   "recipes",
-      //   newRecipe
-      // );*/
-
-      const response = await FirebaseFirestoreRestService.createDocument(
+      const response = await FirebaseFirestoreService.createDocument(
         "recipes",
         newRecipe
       );
+
+      // const response = await FirebaseFirestoreRestService.createDocument(
+      //   "recipes",
+      //   newRecipe
+      // );
 
       handleFetchRecipes();
 
@@ -206,18 +211,17 @@ function App() {
 
   async function handleUpdateRecipe(newRecipe, recipeId) {
     try {
-      /*// await FirebaseFirestoreService.updateDocument(
-      //   "recipes",
-      //   recipeId,
-      //   newRecipe
-      // );
-      */
-
-      await FirebaseFirestoreRestService.updateDocument(
+      await FirebaseFirestoreService.updateDocument(
         "recipes",
         recipeId,
         newRecipe
       );
+
+      // await FirebaseFirestoreRestService.updateDocument(
+      //   "recipes",
+      //   recipeId,
+      //   newRecipe
+      // );
 
       handleFetchRecipes();
 
@@ -237,8 +241,8 @@ function App() {
 
     if (deleteConfirmation) {
       try {
-        // await FirebaseFirestoreService.deleteDocument("recipes", recipeId);
-        await FirebaseFirestoreRestService.deleteDocument("recipes", recipeId);
+        await FirebaseFirestoreService.deleteDocument("recipes", recipeId);
+        //await FirebaseFirestoreRestService.deleteDocument("recipes", recipeId);
 
         handleFetchRecipes();
 
@@ -429,15 +433,15 @@ function App() {
               </select>
             </label>
             <div className="pagination">
-              {/* <button
+              <button
                 type="button"
                 onClick={handleLoadMoreRecipesClick}
                 className="primary-button"
               >
                 LOAD MORE RECIPES
-              </button> */}
+              </button>
 
-              <div className="row">
+              {/* <div className="row">
                 <button
                   className={
                     currentPageNumber === 1
@@ -497,7 +501,7 @@ function App() {
                         );
                       })
                   : null}
-              </div>
+              </div> */}
             </div>
           </>
         ) : null}

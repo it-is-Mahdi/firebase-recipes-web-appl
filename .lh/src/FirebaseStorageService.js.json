@@ -3,11 +3,23 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 0,
+            "activePatchIndex": 3,
             "patches": [
                 {
                     "date": 1693106230490,
                     "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1693459648165,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,7 +1,7 @@\n import firebase from \"./FirebaseConfig\";\r\n \r\n-const storageRef = firebase.storage().ref();\r\n+const storageRef = firebase.storage.ref();\r\n \r\n const uploadFile = (file, fullFilePath, progressCallback) => {\r\n   const uploadTask = storageRef.child(fullFilePath).put(file);\r\n \r\n"
+                },
+                {
+                    "date": 1693537173889,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,6 +1,13 @@\n import firebase from \"./FirebaseConfig\";\r\n \r\n+import {\r\n+  ref,\r\n+  uploadBytesResumable,\r\n+  getDownloadURL,\r\n+  deleteObject,\r\n+} from 'firebase/storage';\r\n+\r\n const storageRef = firebase.storage.ref();\r\n \r\n const uploadFile = (file, fullFilePath, progressCallback) => {\r\n   const uploadTask = storageRef.child(fullFilePath).put(file);\r\n"
+                },
+                {
+                    "date": 1693537449349,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -6,12 +6,14 @@\n   getDownloadURL,\r\n   deleteObject,\r\n } from \"firebase/storage\";\r\n \r\n-const storageRef = firebase.storage.ref();\r\n+const storage = firebase.storage;\r\n \r\n const uploadFile = (file, fullFilePath, progressCallback) => {\r\n-  const uploadTask = storageRef.child(fullFilePath).put(file);\r\n+  \r\n+  const uploadRef = ref(storage, fullFilePath);\r\n+  const uploadTask = uploadBytesResumable(uploadRef, file);\r\n \r\n   uploadTask.on(\r\n     \"state_changed\",\r\n     (snapshot) => {\r\n@@ -26,10 +28,10 @@\n     }\r\n   );\r\n \r\n   return uploadTask.then(async () => {\r\n-    const downloadUrl = await uploadTask.snapshot.ref.getDownloadURL();\r\n \r\n+    const downloadUrl = await getDownloadURL(uploadTask.snapshot.ref);\r\n     return downloadUrl;\r\n   });\r\n };\r\n \r\n@@ -37,10 +39,11 @@\n   const decodedUrl = decodeURIComponent(fileDownloadUrl);\r\n   const startIndex = decodedUrl.indexOf(\"/o/\") + 3;\r\n   const endIndex = decodedUrl.indexOf(\"?\");\r\n   const filePath = decodedUrl.substring(startIndex, endIndex);\r\n-\r\n-  return storageRef.child(filePath).delete();\r\n+  const fileRef = ref(storage, filePath);\r\n+  \r\n+  return deleteObject(fileRef);\r\n };\r\n \r\n const FirebaseStorageService = {\r\n   uploadFile,\r\n"
                 }
             ],
             "date": 1693106230489,
